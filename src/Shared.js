@@ -11,14 +11,13 @@ const Quotable = (props) => {
    fetch(
         `https://api.quotable.io/quotes/${props.match.params.id}`
       ).then(data => data.json())
-      .then(response=> stateHandler({ response }))
+      .then(response=> stateHandler({ data: response }))
       .catch (error => stateHandler({ data: 
         { content: `Opps... Something went wrong because ${error}` } 
       } ))}
       , [props.match.params.id]);
 
-  const { data } = state;
-  if (!data)
+  if (!state.data)
     return (
       <div className="App">
         <Spinner animation="border" role="status">
@@ -32,10 +31,10 @@ const Quotable = (props) => {
         <Card style={{ width: "90%", maxWidth: "40rem" }}>
           <Card.Body>
             <blockquote className="blockquote mb-0">
-              <p>{data.content}</p>
-              {data.author && (
+              <p>{state.data.content}</p>
+              {state.data.author && (
                 <footer className="blockquote-footer">
-                  <cite title="Source Title">{data.author}</cite>
+                  <cite title="Source Title">{state.data.author}</cite>
                 </footer>
               )}
             </blockquote>
