@@ -8,24 +8,14 @@ const Quotable = (props) => {
   });
 
   useEffect(() => {
-    getSharedQuote();
-  }, []);
-
-  const getSharedQuote = async () => {
-    try {
-      const response = await fetch(
+   fetch(
         `https://api.quotable.io/quotes/${props.match.params.id}`
-      );
-      const data = await response.json();
-      if (!response.ok) throw new Error(data);
-      stateHandler({ data });
-    } catch (error) {
-      // If the API request failed, log the error to console and update state
-      // so that the error will be reflected in the UI.
-      console.error(error);
-      stateHandler({ data: { content: "Opps... Something went wrong" } });
-    }
-  };
+      ).then(data => data.json())
+      .then(response=> stateHandler({ response }))
+      .catch (error => stateHandler({ data: 
+        { content: `Opps... Something went wrong because ${error}` } 
+      } ))}
+      , [props.match.params.id]);
 
   const { data } = state;
   if (!data)
